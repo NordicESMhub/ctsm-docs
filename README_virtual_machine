@@ -1,0 +1,39 @@
+Setting up a new virtual machine using uh-iaas:
+
+see also http://docs.uh-iaas.no/en/latest/index.html for instructions. Login or set up new user and project using a web form (see http://docs.uh-iaas.no/en/latest/project-application.html#proper-projects)
+
+Step 1: Create a key pair. Open command prompt/terminal to generate key pair
+
+	ssh-keygen
+	keyname	
+
+The Key is a .pub file and will appear in the file path where you entered your keyname. The key then has to be imported to the uh-iaas. Go to uh-iaas dashboard – key pairs – import key – enter keyname and copy key from the .pub file (open in notepad). 
+
+Step 2: Create an instance (virtual machine). In uh-iaas dashboard, go to Instance – launch instance.
+
+Fill inn the follwing and click 'next' on the rest/accept defaults:
+Instance name (e.g. ctsm_test),
+source (e.g. GOLD Ubuntu 18.04 LTS), 
+Flavor (check with your project quota – choose largest possible?), 
+Network (use dualStack for some reason…), 
+[security network will be chosen later,] 
+Key pair (same as created above, should show up in list) -> launch instance
+
+Step 3: Create and define a security group. Go to Network – security groups – create security group
+Name it e.g. SSH and ICMP – create
+Manage rules – add rule: Rule SSH (choose from dropdown menu) – add
+Manage rules – add rule: Rule ALL ICMP (choose from dropdown menu) – add
+
+Go to compute – instance – actions: edit secutiry groups (choose from dropdown menu) – click + for the security group you created – save
+
+Congrats! Your virtual machine should now work. 
+
+Connecting to your instance/virtual machine: 
+
+open command prompt/terminal and enter “ssh -i instancename ubuntu@ipaddress” (copy the ip address from the instance dashboard), e.g.
+
+	ssh -i ctsm_test ubuntu@158.37.63.157
+
+
+
+
