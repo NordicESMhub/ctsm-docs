@@ -21,6 +21,10 @@ LOAD externals of CTSM (FATES and so on; only necessary first time), in folder ~
 
     ./manage_externals/checkout_externals
     
+NB! Fates is not automatically checked out with the latest version (as it is still under development), and this has to be done manually. 
+Follow https://github.uio.no/huit/clm5.0_notes/issues/26 and https://github.com/ESCOMP/ctsm/wiki/Protocols-on-updating-FATES-within-CTSM
+
+    
 ### Set inputdata for all your cases
 (only first time)
 
