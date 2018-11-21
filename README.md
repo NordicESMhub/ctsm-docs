@@ -2,7 +2,7 @@
 dev version of Community Terrestrial Systems Model (includes the Community Land Model of CESM)
 
 ## out of the box run on abel
-CLONE from GitHub (run only first time, or to update clm/ctsm version)
+CLONE from GitHub (run only first time, or to update clm/ctsm version), in home folder
 
     git clone -b release-clm5.0 https://github.com/NordicESMhub/ctsm.git
 
@@ -17,7 +17,7 @@ CHECK loaded modules
     
     module list
 
-LOAD externals of CTSM (FATES and so on; only necessary first time)
+LOAD externals of CTSM (FATES and so on; only necessary first time), in folder ~/ctsm
 
     ./manage_externals/checkout_externals
     
