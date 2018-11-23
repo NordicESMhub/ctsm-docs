@@ -6,12 +6,15 @@ CLONE from GitHub (run only first time, or to update clm/ctsm version), in home 
 
     git clone -b release-clm5.0 https://github.com/NordicESMhub/ctsm.git
 
-LOAD necessary modules (run every time)
+LOAD necessary modules in .bashrc (only first time)
+
+    emacs .bashrc & 
+add these three modules 
 
     module load python2/2.7.10
     module load cesm
     module load git
-
+save and close
 
 CHECK loaded modules
     
