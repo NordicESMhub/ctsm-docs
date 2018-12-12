@@ -1,0 +1,226 @@
+module load python2/2.7.10
+
+#RUN DE SCRIPT BY TYPING: . ./script.sh if you want the "export" commands to be applied
+
+path1="/usit/abel/u1/marlam/single_cell_experiment"
+path2="/usit/abel/u1/marlam/ctsm"
+path3="/work/users/marlam/inputdata"
+path4="/usit/abel/u1/marlam/cases"
+compset0=I1PtClm50SpGs           #2000_DATM%1PT_CLM50%SP_SICE_SOCN_MOSART_SGLC_SWAV
+#compset0=I2000Clm50BgcCru       #2000_DATM%CRUv7_CLM50%BGC_SICE_SOCN_MOSART_CISM2%NOEVOLVE_SWAV
+#compset0=I2000Clm50BgcCruGs     #2000_DATM%CRUv7_CLM50%BGC_SICE_SOCN_MOSART_SGLC_SWAV
+prepare_atm_data="prepare_atm_forcing_data_CRUNCEP_1996-2010.ncl"
+regridbatch_file="regridbatch_mar.sh"
+
+
+#for GRIDNAME in "1x1_And" "1x1_Abi" "1x1_Abi" "1x1_Deg" "1x1_Zac" "1x1_Nuu"
+for GRIDNAME in "1x1_Adv2"
+do
+	echo
+	echo $GRIDNAME
+	case $GRIDNAME in
+		1x1_Adv2)
+			plot_lat=78.186
+			plot_lon=15.923
+			CDATE=181204 #`date +%y%m%d`
+			;;
+	        1x1_And)
+			plot_lat=69.14
+			plot_lon=16.02
+			CDATE=181212 #today YYMMDD
+			;;
+		1x1_Abi)
+			plot_lat=68.36
+			plot_lon=18.79
+			CDATE=181212 #today YYMMDD
+			;;
+		1x1_Deg)
+			plot_lat=64.18
+			plot_lon=19.56
+			CDATE=181212 #today YYMMDD
+			;;
+		1x1_Zac)
+			plot_lat=74.47
+			plot_lon=339.45
+			CDATE=181212 #today YYMMDD
+			;;
+		1x1_Nuu)
+			plot_lat=64.13
+			plot_lon=308.61
+			CDATE=181212 #today YYMMDD
+			;;
+	esac
+
+###############################¸¸¸¸¸¸¸¸¸ SURFACEDATA¸¸¸¸¸¸¸¸¸¸¸#######################_________________________A
+# 1)Make SCRIPgrid of single cell______________________________________________________________________________A.1
+ 
+	module load ncl
+	module load nco
+	module unload netcdf.gnu/4.4.1.1
+
+if false 
+then
+       cd ${path2}/tools/mkmapdata
+	./mknoocnmap.pl -p $plot_lat,$plot_lon -n $GRIDNAME
+        mv ../mkmapgrids/SCRIPgrid_${GRIDNAME}_nomask_c${CDATE}.nc SCRIPgrid_${GRIDNAME}_nomask.nc
+	MAPFILE= ${path2}/tools/mkmapdata/map_${GRIDNAME}_noocean_to_${GRIDNAME}_nomask_aave_da_${CDATE}.nc
+
+
+
+
+
+# 2)Create the mapping files needed by mksurfdata_map__________________________________________________________A.2
+#here we create a temporary file were we include GRIDNAME and then another were we include CDATE
+
+        echo "________________________________________Start creating mappig files"
+	cd ${path1}
+        tmp=$(<${regridbatch_file})
+	echo "${tmp//GRIDNAME/$GRIDNAME}" > regridbatch_tmp.sh  
+	tmp=$(<regridbatch_tmp.sh)
+	echo "${tmp//CDATE/$CDATE}" > regridbatch_$GRIDNAME.sh  
+	mv -f regridbatch_$GRIDNAME.sh ${path2}/tools/mkmapdata/regridbatch_$GRIDNAME.sh
+	rm -rf regridbatch_tmp.sh
+	cd ${path2}/tools/mkmapdata
+	chmod u+x regridbatch_$GRIDNAME.sh
+        sbatch regridbatch_$GRIDNAME
+
+
+
+
+
+# 3) Create the domain file_____________________________________________________________________________________A.3
+
+       echo "__________________________________________Start creating domain file"
+       cd ${path2}/cime/tools/mapping/gen_domain_files/src
+       export INC_NETCDF=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/include
+       export LIB_NETCDF=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/lib
+       export NETCDF_ROOT=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1
+       ../../../configure --macros-format Makefile --mpilib mpi-serial --machine abel --compiler intel --clean
+       . ./.env_mach_specific.sh
+       gmake
+       cd ..
+       OCNDOM=domain.ocn_noocean.nc
+       ATMDOM=domain.lnd.{$GRIDNAME}_noocean.nc
+       ./gen_domain -m $MAPFILE -o $OCNDOM -l $ATMDOMmv 
+       mv -f domain.lnd.domain.lnd.{$GRIDNAME}_noocean.nc_domain.ocn_noocean.nc.*.nc domain.lnd.{$GRIDNAME}_noocean.nc
+
+
+
+
+
+# 4) Finally create the surface dataset_________________________________________________________________________A.4
+
+        echo "__________________________________________Start creating surface data"
+        cd ${path2}/tools/mksurfdata_map/src
+	export INC_NETCDF=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/include
+	export LIB_NETCDF=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/lib
+	gmake clean
+	gmake
+	cd ..
+	./mksurfdata.pl -r usrspec -usr_gname $GRIDNAME -usr_gdate $CDATE -dinlc ${path3} -allownofile -usr_mapdir ../mkmapdata -years 2000 -no-crop  #not working for years 1850 :/
+	#-no-crop necessary because model is expecting 16 pfts, or with crop but change xml variables
+        mv ${path2}/tools/mksurfdata_map/surfdata_${GRIDNAME}_*.nc ${path3}/lnd/clm2/surfdata_map/surfdata_${GRIDNAME}_simyr2000.nc
+	rm -rf surfdata*.log surfdata*.namelist
+	rm -rf ${path2}/tools/mkmapdata/map_*
+fi
+
+
+OCNDOM=domain.ocn_noocean.nc
+ATMDOM=domain.lnd.{$GRIDNAME}_noocean.nc     
+GENDOM_PATH=${path2}/cime/tools/mapping/gen_domain_files
+
+
+
+
+
+
+###########################,,,,,,,,,,,ATMOSPHERIC FORCING,,,,,,,,,,,,,###_______________________________________B
+if false
+then
+	cd ${path1}
+	ncl 'plot_name="'$GRIDNAME'"' plot_lat=$plot_lat plot_lon=$plot_lon ${prepare_atm_data}
+        #output is there: /work/users/marlam/inputdata/atm/datm7/CLM1PT_data/
+fi
+
+
+
+
+
+
+
+############################,,,,,,,,,,CASE__SETUP,,,,,,,,,,,,,,,,,,,,,,####______________________________________C
+
+if false
+then
+       cd ${path2}/cime/scripts
+       echo "_____________________________________________Start create case"
+       ./create_newcase --case ~/cases/${GRIDNAME}_${compset0} --compset ${compset0}  --res CLM_USRDAT --machine abel --run-unsupported --project geofag
+fi 
+
+
+
+
+if false
+then
+        echo "____________________________________________Start changes"
+	cd ${path4}/${GRIDNAME}_${compset0}
+        ./xmlchange ATM_DOMAIN_PATH=$GENDOM_PATH,LND_DOMAIN_PATH=$GENDOM_PATH
+        ./xmlchange ATM_DOMAIN_FILE=$ATMDOM,LND_DOMAIN_FILE=$ATMDOM
+        ./xmlchange CLM_USRDAT_NAME=$GRIDNAME
+	./xmlchange STOP_OPTION=nyears
+	./xmlchange STOP_N=20
+	./xmlchange RUN_STARTDATE="1996-01-01"
+	./xmlchange DATM_MODE="CLM1PT"
+	./xmlchange RESUBMIT="0"
+	./xmlchange DIN_LOC_ROOT_CLMFORC="/work/users/$USER/inputdata/atm/datm7/CLM1PT_data"	
+	./xmlchange JOB_WALLCLOCK_TIME="03:59:00"
+	./xmlchange PROJECT="uio"
+	./xmlchange DATM_CLMNCEP_YR_ALIGN="1" 
+	./xmlchange DATM_CLMNCEP_YR_START="1996" 
+	./xmlchange DATM_CLMNCEP_YR_END="2015" 
+	./xmlchange DOUT_S="FALSE"
+	./xmlchange GMAKE_J="8" 
+	./xmlchange CLM_ACCELERATED_SPINUP="off"   #fire_method='nofire'
+	cat > user_nl_clm << EOF
+&clm_inparm
+  fsurdat='${path3}/lnd/clm2/surfdata_map/surfdata_${GRIDNAME}_simyr2000.nc'
+  hist_mfilt=365
+  hist_nhtfrq=-24
+/
+&ndepdyn_nml
+  ndepmapalgo = 'nn'
+/
+&popd_streams
+  popdensmapalgo = 'nn'
+/
+&light_streams
+  lightngmapalgo = 'nn'
+/
+EOF
+          echo "__________________________________________Changes done"
+fi 
+if true
+then 
+        cd ${path4}/${GRIDNAME}_${compset0}
+	export NETCDF_ROOT=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1
+	./case.setup --reset
+	sed -i "21i ndepmapalgo = 'nn'" user_nl_clm
+	sed -i "22i popdensmapalgo = 'nn'" user_nl_clm
+	sed -i "23i lightngmapalgo = 'nn'" user_nl_clm
+	echo "____________________________________________Case setup successfully"
+
+
+	./case.build --clean
+	./case.build
+	echo "____________________________________________Case build successfully"
+
+	./preview_namelists
+	cp ${path1}/user_datm.streams.txt.CLM1PT.CLM_USRDAT .
+        chmod u+w user_datm.streams.txt.CLM1PT.CLM_USRDAT
+	./preview_namelists
+
+#	./case.submit
+fi
+cd ${path1}
+done
+###############################################################_____END_____#########################################################""
