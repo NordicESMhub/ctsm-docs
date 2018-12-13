@@ -74,27 +74,27 @@ navigate to the case, e.g. ~/ctsm_cases/fates_f19_g17
 
 1) check the configuration
 
-./xmlquery --l (--l list --f file) 
+./xmlquery --l #(--l list --f file) 
 
 eg 
 
         ./xmlquery STOP_OPTION
 2) Change configuration
 
-        ./xmlchange STOP_OPTION=ndays (nyears, nmonths)
-        ./xmlchange STOP_N=5 (then 5 days)
-        ./xmlchange NTASKS=1 (number of CPU's, can be increased if excitation error)
+        ./xmlchange STOP_OPTION=ndays #(nyears, nmonths)
+        ./xmlchange STOP_N=5 #(then 5 days)
+        ./xmlchange NTASKS=1 #(number of CPU's, can be increased if excitation error)
 or edit the xml files is another way to change these parameters
 
 3) 
 
-           ./case.setup  (--reset)
+           ./case.setup  #(--reset)
         
 4) edit user_nl_clm   
 add this below
 
-        hist_mfilt=5 (number of output files
-        hist_nhtfrq=-24 (means daily outputs)
+        hist_mfilt=5 #(number of output files)
+        hist_nhtfrq=-24 #(means daily outputs)
 
 ### case build
     
