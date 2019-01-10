@@ -20,7 +20,11 @@ CHECK loaded modules
     
     module list
 
-Create your own branch before continuing [insert description here]
+Create your own branches before continuing, in ~/ctsm AND in ~ctsm/cime
+    
+    git branch <username_clm5.0.12>   # useful for remembering version
+    git checkout  <username_clm5.0.12>
+    git branch # to verify that you are on the branch you just created
 
 
 LOAD externals of CTSM (FATES and so on; only necessary first time), in folder ~/ctsm. If you are updating FATES go here first: (https://github.com/NordicESMhub/ctsm-dev/blob/master/Updating_FATES.md)
