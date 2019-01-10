@@ -77,7 +77,7 @@ or other compset
 
    
 ### set up new case
-navigate to the case, e.g. ~/ctsm_cases/fates_f19_g17
+navigate to the case directory, e.g. ~/ctsm_cases/fates_f19_g17
 
 1) check the configuration
 
