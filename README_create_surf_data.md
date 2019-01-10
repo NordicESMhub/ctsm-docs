@@ -5,16 +5,18 @@
 	B) GENERATE ATMOSPHERIC FORCING
 	C) COMPILE FATES
 
-navigate to "/cluster/home/peterhor/ctsm/tools"
+## navigate to "/cluster/home/$USERNAME/ctsm/tools"
 
-readme
+read the readme file
+ 
+## changing will take place in 3 folders
+	
+	1) mkmapgrids/
+	2) mkmapdata/ 
+	3) mksurfdata_map/
 
-changing 3 folders
-1/mkmapgrids/
-2/mkmapdata/ 
-3/mksurfdata_map/
-
-## 1 create export to name variables, which will consecutively be changed in 'mkscripgrid.ncl' file in /cluster/home/peterhor/ctsm/tools/mkmapgrids/
+## 1 create export to name variables, which will consecutively be changed in 'mkscripgrid.ncl' file in 	
+/cluster/home/peterhor/ctsm/tools/mkmapgrids/
 
 ### Description of changed variables
 
