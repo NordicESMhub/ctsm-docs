@@ -20,7 +20,7 @@ CHECK loaded modules
     
     module list
 
-LOAD externals of CTSM (FATES and so on; only necessary first time), in folder ~/ctsm
+LOAD externals of CTSM (FATES and so on; only necessary first time), in folder ~/ctsm. If you are updating FATES go here first: (https://github.com/NordicESMhub/ctsm-dev/blob/master/Updating_FATES.md)
 
     ./manage_externals/checkout_externals
     
