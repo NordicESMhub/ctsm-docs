@@ -1,0 +1,24 @@
+# Tutorial on how to create surface data for single point
+
+navigate to "/cluster/home/peterhor/ctsm/tools"
+
+readme
+
+changing 3 folders
+1/mkmapgrids/
+2/mkmapdata/ 
+3/mksurfdata_map/
+
+1 create export to name variables
+PTNAME    ! name of your grid
+S_LAT     ! Southern latitude corner
+N_LAT     ! Northern latitude corner
+E_LON     ! Eastern longitude corner
+W_LON     ! Western longitude corner  
+  
+  export PTNAME=1x1Jotunheimen
+  export S_LAT=61.48457
+  export N_LAT=61.48668
+  export E_LON=8.84752
+  export W_LON=8.84346
+  
