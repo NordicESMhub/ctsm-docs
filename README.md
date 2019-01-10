@@ -20,7 +20,7 @@ CHECK loaded modules
     
     module list
 
-Create your own branches before continuing, in ~/ctsm AND in ~ctsm/cime
+Create your own branches before continuing, in ~/ctsm AND in ~ctsm/cime. Do this for FATES or any other modules in addition.
     
     git branch <username_clm5.0.12>   # useful for remembering version
     git checkout  <username_clm5.0.12>
@@ -44,7 +44,7 @@ Follow https://github.com/NordicESMhub/ctsm-dev/blob/master/Updating_FATES (base
 ### Set your Notur project account
 
 
-NB! this example is connected to project nn2806k (for your own project, change the project code):
+NB! this example is connected to project nn2806k (for your own project, change the project code. To see available projects and resources, use cost -p):
 
      export CESM_ACCOUNT=nn2806k
 
