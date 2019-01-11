@@ -133,6 +133,27 @@ do changes in test.cdl in texteditor and save to ncdf
 	ncgen -o test.nc test.cdl
 
 
+# create domain
+/cluster/home/peterhor/ctsm/cime/tools/mapping/gen_domain_files/
+follow INSTALL
+(1) $ cd src
+(2) $ ../../../configure --machine abel --macros-format Makefile --mpilib mpi-serial
+Bash users:
+(3) $ (. ./.env_mach_specific.sh ; gmake)
+
+./gen_domain -m <filemap>
+             -o <gridocn>
+             -l <gridlnd>
+             [-p set_fv_pole_yc]
+             [-c <user comment gen_domain.nml>]
+
+
+filemap is generated as follows:
+mk
+
+
+
+
 automatization of these proceses can be adapted from :
 https://github.uio.no/huit/single_cell_experiment/blob/master/run_script_c14_plots
 
