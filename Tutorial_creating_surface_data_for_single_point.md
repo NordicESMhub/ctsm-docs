@@ -74,3 +74,70 @@ Changes needed in the new regridbatch.sh to adapt to your folder structure and f
 	
 ### check also process file slurm****.out in the mkmapdata folder
   
+
+
+## B) Making surface data
+go to > $/tools/mksurfdata_map
+
+library for ncdf has to be consistent
+
+	module load netcdf.intel/4.3.3.1  
+adjust library paths in the file /cluster/home/peterhor/ctsm/tools/mksurfdata_map/src/Makefile.common
+line 33
+LIB_NETCDF := /cluster/software/VERSIONS/netcdf.intel-4.3.3.1/lib
+and line 35
+INC_NETCDF := /cluster/software/VERSIONS/netcdf.intel-4.3.3.1/include
+
+these paths are found in information about the specific module
+
+	module show netcdf.intel/4.3.3.1
+
+Then run gmake again
+
+	gmake
+	
+then go back to /cluster/home/peterhor/ctsm/tools/mksurfdata_map/ and run mksurfdata.pl
+
+check the options
+
+	./mksurfdata.pl --help
+
+#IMPORTANT!!! this file sets up the details about your surface grid
+check, examine, read what could be potentially relevant to change
+
+mksurfdata.pl -res usrspec -usr_gname <user_gname> -usr_gdate <user_gdate>  [OPTIONS]
+-res specified by user
+-usr_gname 1x1_km (in this case 1x1 otherwise in mkmapdata files ex: map_5x5min_nomask_to_1x1_km_nomask_aave_da_c190110.nc)
+-usr_date 190110 is the date when created
+-usr_mapdir path to mkmapdata
+-dinlc directory for inputdata./
+-no-crop exclude crop PFT form file
+-allownofile  #!Allow the script to run even if one of the input files does NOT exist.
+-years
+also check other useful options for exampe dynamic pft -dynpft or -hirespft
+
+	./mksurfdata.pl -res usrspec -usr_gname 1x1_km -usr_gdate 190110 -usr_mapdir /cluster/home/peterhor/ctsm/tools/mkmapdata -dinlc /work/users/peterhor/inputdata -allownofile -years 2000 -no-crop
+
+
+check dataset
+	
+	module load ncview
+	ncview surfdata_1x1_km_hist_16pfts_Irrig_CMIP6_simyr2000_c190111.nc
+	ncdump surfdata_1x1_km_hist_16pfts_Irrig_CMIP6_simyr2000_c190111.nc 
+save to file
+
+	ncdump surfdata_1x1_km_hist_16pfts_Irrig_CMIP6_simyr2000_c190111.nc >test.cdl
+
+do changes in test.cdl in texteditor and save to ncdf
+ 
+	ncgen -o test.nc test.cdl
+
+
+automatization of these proceses can be adapted from :
+https://github.uio.no/huit/single_cell_experiment/blob/master/run_script_c14_plots
+
+
+git status
+git add
+git commit
+
