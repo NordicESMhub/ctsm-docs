@@ -108,15 +108,16 @@ check the options
 
 #IMPORTANT!!! this file sets up the details about your surface grid
 check, examine, read what could be potentially relevant to change. Peter&Eva changed these:
--res usrspec 
--usr_gname 1x1_km # in this case 1x1 otherwise in mkmapdata files e.g. map_5x5min_nomask_to_1x1_km_nomask_aave_da_c190110.nc)
--usr_gdate 190110 # time mapping files were generated (10.jan.2019)
--usr_mapdir      # path to mkmapdata
--dinlc          # directory for the inputdata	
--allownofile    # Allow the script to run even if one of the input files does NOT exist.
--no-crop	# Include if locality has no agricultural land (exclude crop PFT)
--years 2000	# when the model is run (default is 1850-2000 which will give error if e.g. the input data for 1850 is not available)
-also check other useful options for exampe dynamic pft -dynpft or -hirespft
+
+	# -res usrspec 
+	# -usr_gname 1x1_km # in this case 1x1 otherwise in mkmapdata files e.g. map_5x5min_nomask_to_1x1_km_nomask_aave_da_c190110.nc)
+	# -usr_gdate 190110 # time mapping files were generated (10.jan.2019)
+	# -usr_mapdir      # path to mkmapdata
+	# -dinlc          # directory for the inputdata	
+	# -allownofile    # Allow the script to run even if one of the input files does NOT exist.
+	# -no-crop	# Include if locality has no agricultural land (exclude crop PFT)
+	# -years 2000	# when the model is run (default is 1850-2000 which will give error if e.g. the input data for 1850 is not available)
+	# also check other useful options for exampe dynamic pft -dynpft or -hirespft
 
 	./mksurfdata.pl -res usrspec -usr_gname 1x1_km -usr_gdate 190110 -usr_mapdir /cluster/home/peterhor/ctsm/tools/mkmapdata -dinlc /work/users/peterhor/inputdata -allownofile -years 2000 -no-crop
 
@@ -162,11 +163,13 @@ this generates three files. Two are put in /cluster/home/evaler/ctsm/tools/mkmap
 
 go back to /ctsm/cime/tools/mapping/gen_domain_files/
 
-gen_domain -m <filemap> # mapping file name for atm to ocean, e.g. map_aurland_noocean_to_aurland_nomask_aave_da_190111.nc
-            -o <gridocn> # invent a name, e.g. 1x1_ocn_aurland
-            -l <gridlnd> # invent a name, e.g. 1x1_lnd_aurland
-            [-p set_fv_pole_yc]
-            [-c <user comment gen_domain.nml>]
+	# gen_domain 
+	# -m <filemap> # mapping file name for atm to ocean, e.g. map_aurland_noocean_to_aurland_nomask_aave_da_190111.nc
+        # -o <gridocn> # invent a name, e.g. 1x1_ocn_aurland
+        # -l <gridlnd> # invent a name, e.g. 1x1_lnd_aurland
+        # [-p set_fv_pole_yc]
+        # [-c <user comment gen_domain.nml>]
+	
 	
 		./gen_domain -m ~/ctsm/tools/mkmapdata/map_aurland_noocean_to_aurland_nomask_aave_da_190111.nc -o 1x1_aurland_ocn -l 1x1_aurland_ocn
 to check if the coordinates are consistent, go to /cluster/home/evaler/ctsm/tools/mkmapgrids/ and use 
