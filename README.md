@@ -14,7 +14,6 @@ add these three modules
     module load python2/2.7.10
     module load cesm
     module load git
-    module load netcdf
     
 save and close
 
@@ -24,7 +23,7 @@ CHECK loaded modules
 
 Create your own branches before continuing, in ~/ctsm AND in ~ctsm/cime. Do this for FATES or any other modules in addition.
     
-    git branch <username_clm5.0.12>   # useful for remembering version
+    git branch <username_clm5.0.12>   # useful for remembering version, name according to function e.g. username_cime_clm5.0.12 and username_fates_clm5.0.12
     git checkout  <username_clm5.0.12>
     git branch # to verify that you are on the branch you just created
 
