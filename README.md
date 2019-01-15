@@ -14,6 +14,8 @@ add these three modules
     module load python2/2.7.10
     module load cesm
     module load git
+    module load netcdf
+    
 save and close
 
 CHECK loaded modules
