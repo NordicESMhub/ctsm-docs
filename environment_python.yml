@@ -1,4 +1,4 @@
-name: base
+name: clm_analysis
 
 channels:
   - conda-forge
