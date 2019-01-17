@@ -188,26 +188,35 @@ add forcing files to a new folder: atm_forcing_data
 
 ### For each new case some files must be modified. Go to the case directory /cluster/home/peterhor/ctsm_cases/fates_jotunheimen/
 always check in these files:
+
 env_mach_pes.xml - change CPU if necessary (1 is good for single cell)
+
 env_batch.xml - change the following:
+
 	line 76     <entry id="JOB_WALLCLOCK_TIME" value="01:30:00"> # set to low number by defult (for testing, will be bumped up in run queue), adjust for how long you need for the model run
 
 env_run.xml - change/check the following:
+
 	line 113	<entry id="RUN_STARTDATE" value="0001-01-01"> # change to your start up date, e.g. 1999-01-01
 	line 125 	<entry id="STOP_OPTION" value="ndays"> # number of days, check line 127 for possible values
 	line 132 	<entry id="STOP_N" value="5"> # 
 	line 222 	<entry id="CONTINUE_RUN" value="FALSE"> # sometimes, change if you need to stop a specific year and then continue from that year. 
 	line 297 	<entry id="GMAKE_J" value="1"> # set to 8 to make compiling faster
 	line 411	<entry id="ATM_DOMAIN_FILE" value="UNSET"> # set to the domain file generated above, e.g. domain.lnd.1x1_aurland_ocn_1x1_aurland_ocn.190111.nc
-look at the path in line 415, copy the domain file into that folder
+	
+	#look at the path in line 415, copy the domain file into that folder
+	
 	line 419 	    <entry id="LND_DOMAIN_FILE" value="domain.lnd.1x1_aurland_ocn_1x1_aurland_ocn.190111.nc"> #
 	line 766 	    <entry id="DIN_LOC_ROOT" value="/work/users/$USER/inputdata"> # where the model looks for input data
 	line 1292-1302 	    <entry id="DATM_CLMNCEP_YR_ALIGN" value="1"> # change the years to something that fits the experiment, e.g. 1999 and start 1990 and end 2010 (of the cycle).
 	line 1309 	    <entry id="LND_TUNING_MODE" value="clm5_0_GSWP3v1"> # change based on how the atm_forcing is made / what the  atmospheric data based on
+
 copy the surface data file into the surfdata_map folder:
 	
 	cp ~/ctsm/tools/mksurfdata_map/surfdata_1x1_km_hist_16pfts_Irrig_CMIP6_simyr2000_c190111.nc /work/users/evaler/inputdata/lnd/clm2/surfdata_map/
-back to the env_run.xml:
+	
+back to the env_run.xml - change:
+
 	line 1354    <entry id="CLM_USRDAT_NAME" value="1x1_km"> # give a name that will identify the file, here 1x1, to describe file (not file name nor path)
 
 
