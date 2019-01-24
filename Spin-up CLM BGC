@@ -1,0 +1,16 @@
+
+
+
+1.create case
+
+    ./create_newcase -case BGC_spinup -res f19_g16 -compset I1850CRUCLM45BGC -mach yellowstone_intel
+    ./xmlchange CLM_BLDNML_OPTS="-bgc_spinup on" -append
+    ./xmlchange RUN_TYPE=startup
+    ./xmlchange CLM_FORCE_COLDSTART=on
+    echo 'hist_nhtfrq = -8760' >> user_nl_clm   #output history files only annual
+    
+2. setup and build
+
+    ./case.setup
+    ./case.build
+    ./xmlchange RESUBMIT=20,STOP_N=50,STOP_OPTION=nyears,STOP_DATE=10010101
