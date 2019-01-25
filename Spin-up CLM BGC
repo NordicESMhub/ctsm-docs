@@ -3,14 +3,19 @@
 
 1.create case
 
-    ./create_newcase -case BGC_spinup -res f19_g16 -compset I1850CRUCLM45BGC -mach yellowstone_intel
-    ./xmlchange CLM_BLDNML_OPTS="-bgc_spinup on" -append
-    ./xmlchange RUN_TYPE=startup
-    ./xmlchange CLM_FORCE_COLDSTART=on
+    ./xmlchange DATM_CLMNCEP_YR_ALIGN="1901" 
+	./xmlchange DATM_CLMNCEP_YR_START="1901" 
+	./xmlchange DATM_CLMNCEP_YR_END="1920" 
+	./xmlchange DOUT_S="FALSE"
+	./xmlchange GMAKE_J="8" 
+	./xmlchange CLM_FORCE_COLDSTART=on,RUN_TYPE=startup
+	./xmlchange CLM_ACCELERATED_SPINUP="on"   #fire_method='nofire'
+	./xmlchange RESUBMIT=50,STOP_N=20,STOP_OPTION=nyears,STOP_DATE=10010101
+    
     echo 'hist_nhtfrq = -8760' >> user_nl_clm   #output history files only annual
     
 2. setup and build
 
     ./case.setup
     ./case.build
-    ./xmlchange RESUBMIT=20,STOP_N=50,STOP_OPTION=nyears,STOP_DATE=10010101
+    
