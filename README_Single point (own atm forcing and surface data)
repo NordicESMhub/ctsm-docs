@@ -1,166 +1,219 @@
-module load python2/2.7.10
+#!/bin/sh
 
-#RUN DE SCRIPT BY TYPING: . ./script.sh if you want the "export" commands to be applied
 
 path1="/usit/abel/u1/marlam/single_cell_experiment"
 path2="/usit/abel/u1/marlam/ctsm"
 path3="/work/users/marlam/inputdata"
 path4="/usit/abel/u1/marlam/cases"
-compset0=I1PtClm50SpGs           #2000_DATM%1PT_CLM50%SP_SICE_SOCN_MOSART_SGLC_SWAV
-#compset0=I2000Clm50BgcCru       #2000_DATM%CRUv7_CLM50%BGC_SICE_SOCN_MOSART_CISM2%NOEVOLVE_SWAV
-#compset0=I2000Clm50BgcCruGs     #2000_DATM%CRUv7_CLM50%BGC_SICE_SOCN_MOSART_SGLC_SWAV
-prepare_atm_data="prepare_atm_forcing_data_CRUNCEP_1996-2010.ncl"
+#compset0=I1PtClm50SpGs           #2000_DATM%1PT_CLM50%SP_SICE_SOCN_MOSART_SGLC_SWAV
+compset0=I2000Clm50BgcCruGs      #2000_DATM%CRUv7_CLM50%BGC_SICE_SOCN_MOSART_SGLC_SWAV
+#compset0=I2000Clm50SpGs           #2000_DATM%GSWP3v1_CLM50%SP_SICE_SOCN_MOSART_SGLC_SWAV
+prepare_atm_data1="prepare_atm_forcing_data_CRUNCEP_1901-1920.ncl"
+prepare_atm_data2="prepare_atm_forcing_data_CRUNCEP_1921-1955.ncl"
+prepare_atm_data3="prepare_atm_forcing_data_CRUNCEP_1956-1990.ncl"
+prepare_atm_data4="prepare_atm_forcing_data_CRUNCEP_1991-2016.ncl"
+prepare_atm_dataA="prepare_atm_forcing_data_GSWP_1901-1935.ncl"
+prepare_atm_dataB="prepare_atm_forcing_data_GSWP_1936-1972.ncl"
+prepare_atm_dataC="prepare_atm_forcing_data_GSWP_1973-2010.ncl"
 regridbatch_file="regridbatch_mar.sh"
+stream_file="stream_file_1901_to_1901"
+imports="run_locality_append.sh"
 
-
-#for GRIDNAME in "1x1_And" "1x1_Abi" "1x1_Abi" "1x1_Deg" "1x1_Zac" "1x1_Nuu"
-for GRIDNAME in "1x1_Adv2"
+#for GRIDNAME in "1x1_Zac" "1x1_Nuu" "1x1_And" "1x1_Abi" #"1x1_Deg" "1x1_Adv2"  #"1x1_Abisko_pan" "1x1_Samoylov_pan"
+for GRIDNAME in "1x1_Abisko_pan" # "1x1_Kytalyk_pan" #"1x1_Bayelva_pan" "1x1_Zackenberg_pan"
 do
 	echo
 	echo $GRIDNAME
 	case $GRIDNAME in
 		1x1_Adv2)
-			plot_lat=78.186
+			plot_lat=78.186          #####################################-----FLUXNET_________________________________
 			plot_lon=15.923
 			CDATE=181204 #`date +%y%m%d`
 			;;
 	        1x1_And)
 			plot_lat=69.14
 			plot_lon=16.02
-			CDATE=181212 #today YYMMDD
+			CDATE=181217 #today YYMMDD
 			;;
 		1x1_Abi)
 			plot_lat=68.36
 			plot_lon=18.79
-			CDATE=181212 #today YYMMDD
+			CDATE=181215 #today YYMMDD
 			;;
 		1x1_Deg)
 			plot_lat=64.18
 			plot_lon=19.56
-			CDATE=181212 #today YYMMDD
+			CDATE=181216 #today YYMMDD
 			;;
 		1x1_Zac)
 			plot_lat=74.47
 			plot_lon=339.45
-			CDATE=181212 #today YYMMDD
+			CDATE=181217 #today YYMMDD
 			;;
 		1x1_Nuu)
 			plot_lat=64.13
 			plot_lon=308.61
-			CDATE=181212 #today YYMMDD
+			CDATE=181217 #today YYMMDD #####################################-----PANGAEA_________________________________
+			;;
+		1x1_Abisko_pan)
+			plot_lat=68.35 
+			plot_lon=19.05
+			CDATE=181219 #`date +%y%m%d`
+			;;
+	        1x1_Bayelva_pan)
+			plot_lat=78.92
+			plot_lon=11.93
+			CDATE=190103 #today YYMMDD
+			;;
+		1x1_Kytalyk_pan)
+			plot_lat=70.83
+			plot_lon=147.5
+			CDATE=190110 #today YYMMDD
+			;;
+		1x1_Samoylov_pan)
+			plot_lat=72.22
+			plot_lon=126.28
+			CDATE=190104 #today YYMMDD
+			;;
+		1x1_Zackenberg_pan)
+			plot_lat=74.5
+			plot_lon=339.4
+			CDATE=190103 #today YYMMDD
 			;;
 	esac
 
 ###############################¸¸¸¸¸¸¸¸¸ SURFACEDATA¸¸¸¸¸¸¸¸¸¸¸#######################_________________________A
 # 1)Make SCRIPgrid of single cell______________________________________________________________________________A.1
- 
-	module load ncl
-	module load nco
-	module unload netcdf.gnu/4.4.1.1
 
-if false 
+module load python2/2.7.10
+module load ncl
+module load nco
+module unload netcdf.gnu/4.4.1.1
+#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+
+
+if false #1
 then
        cd ${path2}/tools/mkmapdata
 	./mknoocnmap.pl -p $plot_lat,$plot_lon -n $GRIDNAME
-        mv ../mkmapgrids/SCRIPgrid_${GRIDNAME}_nomask_c${CDATE}.nc SCRIPgrid_${GRIDNAME}_nomask.nc
-	MAPFILE= ${path2}/tools/mkmapdata/map_${GRIDNAME}_noocean_to_${GRIDNAME}_nomask_aave_da_${CDATE}.nc
+        mv ../mkmapgrids/SCRIPgrid_${GRIDNAME}_nomask_c${CDATE}.nc ../mkmapgrids/SCRIPgrid_${GRIDNAME}_nomask.nc
+	mkdir -p ${path2}/tools/mkmapdata/$GRIDNAME
+	mv ${path2}/tools/mkmapdata/map_${GRIDNAME}_noocean_to_${GRIDNAME}_nomask_aave_da_${CDATE}.nc ${path2}/tools/mkmapdata/$GRIDNAME/map_${GRIDNAME}_noocean_to_${GRIDNAME}_nomask_aave_da_${CDATE}.nc
 
-
-
-
+	
 
 # 2)Create the mapping files needed by mksurfdata_map__________________________________________________________A.2
-#here we create a temporary file were we include GRIDNAME and then another were we include CDATE
+#here we create a temporary file were we include GRIDNAME and then another were we include CDATE --> CDATE must be CORRECT!!!!!!!!
 
         echo "________________________________________Start creating mappig files"
 	cd ${path1}
         tmp=$(<${regridbatch_file})
-	echo "${tmp//GRIDNAME/$GRIDNAME}" > regridbatch_tmp.sh  
-	tmp=$(<regridbatch_tmp.sh)
-	echo "${tmp//CDATE/$CDATE}" > regridbatch_$GRIDNAME.sh  
+	echo "${tmp//GRIDNAME/$GRIDNAME}" > regridbatch_$GRIDNAME.sh  
 	mv -f regridbatch_$GRIDNAME.sh ${path2}/tools/mkmapdata/regridbatch_$GRIDNAME.sh
-	rm -rf regridbatch_tmp.sh
 	cd ${path2}/tools/mkmapdata
 	chmod u+x regridbatch_$GRIDNAME.sh
-        sbatch regridbatch_$GRIDNAME
+        sbatch regridbatch_$GRIDNAME.sh	
+	sleep 300m
+fi
 
 
 
 
+if false #2
+then
+	cd ${path2}/tools/mkmapdata
+	mv -f map_*$GRIDNAME* $GRIDNAME/
+       
 
 # 3) Create the domain file_____________________________________________________________________________________A.3
 
        echo "__________________________________________Start creating domain file"
+       cd ${path1}
+        . ./$imports
        cd ${path2}/cime/tools/mapping/gen_domain_files/src
-       export INC_NETCDF=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/include
-       export LIB_NETCDF=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/lib
-       export NETCDF_ROOT=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1
        ../../../configure --macros-format Makefile --mpilib mpi-serial --machine abel --compiler intel --clean
        . ./.env_mach_specific.sh
        gmake
        cd ..
        OCNDOM=domain.ocn_noocean.nc
-       ATMDOM=domain.lnd.{$GRIDNAME}_noocean.nc
-       ./gen_domain -m $MAPFILE -o $OCNDOM -l $ATMDOMmv 
-       mv -f domain.lnd.domain.lnd.{$GRIDNAME}_noocean.nc_domain.ocn_noocean.nc.*.nc domain.lnd.{$GRIDNAME}_noocean.nc
+       ATMDOM=domain.lnd.{$GRIDNAME}_noocean.nccd 
+       MAPFILE="${path2}/tools/mkmapdata/${GRIDNAME}/map_${GRIDNAME}_noocean_to_${GRIDNAME}_nomask_aave_da_${CDATE}.nc"
+       ./gen_domain -m $MAPFILE -o $OCNDOM -l $ATMDOM
+       mkdir -p $GRIDNAME
+       mv domain* $GRIDNAME/
+       mv -f $GRIDNAME/domain.lnd.*{$GRIDNAME}*.nc $GRIDNAME/domain.lnd.{$GRIDNAME}_noocean.nc
 
-
-
-
-
-# 4) Finally create the surface dataset_________________________________________________________________________A.4
-
-        echo "__________________________________________Start creating surface data"
-        cd ${path2}/tools/mksurfdata_map/src
-	export INC_NETCDF=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/include
-	export LIB_NETCDF=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/lib
-	gmake clean
-	gmake
-	cd ..
-	./mksurfdata.pl -r usrspec -usr_gname $GRIDNAME -usr_gdate $CDATE -dinlc ${path3} -allownofile -usr_mapdir ../mkmapdata -years 2000 -no-crop  #not working for years 1850 :/
-	#-no-crop necessary because model is expecting 16 pfts, or with crop but change xml variables
-        mv ${path2}/tools/mksurfdata_map/surfdata_${GRIDNAME}_*.nc ${path3}/lnd/clm2/surfdata_map/surfdata_${GRIDNAME}_simyr2000.nc
-	rm -rf surfdata*.log surfdata*.namelist
-	rm -rf ${path2}/tools/mkmapdata/map_*
 fi
 
 
+
+if false #3
+then
+# 4) Finally create the surface dataset_________________________________________________________________________A.4
+
+        echo "__________________________________________Start creating surface data"
+	cd ${path1}
+        . ./run_locality_append.sh
+	cd ${path2}/tools/mksurfdata_map/src
+	gmake clean
+	gmake
+	cd ..
+	./mksurfdata.pl -r usrspec -usr_gname $GRIDNAME -usr_gdate $CDATE -dinlc ${path3} -allownofile -usr_mapdir ../mkmapdata/$GRIDNAME -years 2000 -no-crop  #not working for years 1850 :/
+	#-no-crop necessary because model is expecting 16 pfts, or with crop but change xml variables
+        mv ${path2}/tools/mksurfdata_map/surfdata_${GRIDNAME}_*.nc ${path3}/lnd/clm2/surfdata_map/surfdata_${GRIDNAME}_simyr2000.nc
+	rm -rf surfdata*.log surfdata*.namelist
+	rm -rf ${path2}/tools/mkmapdata/${GRIDNAME}
+
+
+fi
+
 OCNDOM=domain.ocn_noocean.nc
 ATMDOM=domain.lnd.{$GRIDNAME}_noocean.nc     
-GENDOM_PATH=${path2}/cime/tools/mapping/gen_domain_files
-
-
+GENDOM_PATH=${path2}/cime/tools/mapping/gen_domain_files/$GRIDNAME
 
 
 
 
 ###########################,,,,,,,,,,,ATMOSPHERIC FORCING,,,,,,,,,,,,,###_______________________________________B
-if false
+if false #4
 then
 	cd ${path1}
-	ncl 'plot_name="'$GRIDNAME'"' plot_lat=$plot_lat plot_lon=$plot_lon ${prepare_atm_data}
+	module load ncl
+	ncl 'plot_name="'$GRIDNAME'"' plot_lat=$plot_lat plot_lon=$plot_lon ${prepare_atm_data1}
+	ncl 'plot_name="'$GRIDNAME'"' plot_lat=$plot_lat plot_lon=$plot_lon ${prepare_atm_data2}
+	ncl 'plot_name="'$GRIDNAME'"' plot_lat=$plot_lat plot_lon=$plot_lon ${prepare_atm_data3}
+	ncl 'plot_name="'$GRIDNAME'"' plot_lat=$plot_lat plot_lon=$plot_lon ${prepare_atm_data4}
         #output is there: /work/users/marlam/inputdata/atm/datm7/CLM1PT_data/
 fi
+if false #4
+then
+	cd ${path1}
+	module load ncl
+	ncl 'plot_name="'$GRIDNAME'"' plot_lat=$plot_lat plot_lon=$plot_lon ${prepare_atm_dataA}
+	ncl 'plot_name="'$GRIDNAME'"' plot_lat=$plot_lat plot_lon=$plot_lon ${prepare_atm_dataB}
+	ncl 'plot_name="'$GRIDNAME'"' plot_lat=$plot_lat plot_lon=$plot_lon ${prepare_atm_dataC}
+        #output is there: /work/users/marlam/inputdata/atm/datm7/CLM1PT_data2/
+fi
+
+#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
 
 
 
-
-
-
-############################,,,,,,,,,,CASE__SETUP,,,,,,,,,,,,,,,,,,,,,,####______________________________________C
-
-if false
+############################,,,,,,,,,,CASE__SETUP,,,,,,,,,,,,,,,,,,,,,,####______________________________________
+if true #5
 then
        cd ${path2}/cime/scripts
        echo "_____________________________________________Start create case"
+       export CESM_ACCOUNT=geofag
        ./create_newcase --case ~/cases/${GRIDNAME}_${compset0} --compset ${compset0}  --res CLM_USRDAT --machine abel --run-unsupported --project geofag
-fi 
+fi
 
-
-
-
-if false
+if true #6
 then
         echo "____________________________________________Start changes"
 	cd ${path4}/${GRIDNAME}_${compset0}
@@ -168,21 +221,22 @@ then
         ./xmlchange ATM_DOMAIN_FILE=$ATMDOM,LND_DOMAIN_FILE=$ATMDOM
         ./xmlchange CLM_USRDAT_NAME=$GRIDNAME
 	./xmlchange STOP_OPTION=nyears
-	./xmlchange STOP_N=20
-	./xmlchange RUN_STARTDATE="1996-01-01"
+	./xmlchange STOP_N=114
+	./xmlchange RUN_STARTDATE="1901-01-01"
 	./xmlchange DATM_MODE="CLM1PT"
 	./xmlchange RESUBMIT="0"
 	./xmlchange DIN_LOC_ROOT_CLMFORC="/work/users/$USER/inputdata/atm/datm7/CLM1PT_data"	
 	./xmlchange JOB_WALLCLOCK_TIME="03:59:00"
-	./xmlchange PROJECT="uio"
-	./xmlchange DATM_CLMNCEP_YR_ALIGN="1" 
-	./xmlchange DATM_CLMNCEP_YR_START="1996" 
-	./xmlchange DATM_CLMNCEP_YR_END="2015" 
+	./xmlchange PROJECT="geofag"
+	./xmlchange DATM_CLMNCEP_YR_ALIGN="1901" 
+	./xmlchange DATM_CLMNCEP_YR_START="1901" 
+	./xmlchange DATM_CLMNCEP_YR_END="2014" 
 	./xmlchange DOUT_S="FALSE"
 	./xmlchange GMAKE_J="8" 
 	./xmlchange CLM_ACCELERATED_SPINUP="off"   #fire_method='nofire'
 	cat > user_nl_clm << EOF
 &clm_inparm
+  create_crop_landunit = .true.
   fsurdat='${path3}/lnd/clm2/surfdata_map/surfdata_${GRIDNAME}_simyr2000.nc'
   hist_mfilt=365
   hist_nhtfrq=-24
@@ -197,30 +251,220 @@ then
   lightngmapalgo = 'nn'
 /
 EOF
-          echo "__________________________________________Changes done"
-fi 
-if true
-then 
+	cat> user_nl_datm <<EOF
+&shr_strdata_nml
+   vectors        = 'null'
+   mapmask        = 'nomask','nomask','nomask'
+   mapalgo        = 'nn','nn','nn'
+   tintalgo       = 'nearest','linear','lower'
+   taxmode        = 'cycle','extend','extend'
+   streams        = 'datm.streams.txt.CLM1PT.CLM_USRDAT 1901 1901 2014 ',
+                    'datm.streams.txt.presaero.clim_2000 1 1 1',
+                    'datm.streams.txt.topo.observed 1 1 1'
+/
+EOF
+        echo "____________________________________________Changes done"
+	cd ${path1}
+        . ./$imports
         cd ${path4}/${GRIDNAME}_${compset0}
-	export NETCDF_ROOT=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1
-	./case.setup --reset
-	sed -i "21i ndepmapalgo = 'nn'" user_nl_clm
-	sed -i "22i popdensmapalgo = 'nn'" user_nl_clm
-	sed -i "23i lightngmapalgo = 'nn'" user_nl_clm
+	./case.setup # --reset
 	echo "____________________________________________Case setup successfully"
 
 
-	./case.build --clean
+#	./case.build --clean
 	./case.build
 	echo "____________________________________________Case build successfully"
+fi
 
+if false #7
+then
+       	cd ${path1}
+        . ./$imports
+	tmp=$(<${stream_file})
+	echo "${tmp//GRIDNAME/$GRIDNAME}" > user_datm.streams.txt.CLM1PT.CLM_USRDAT_${GRIDNAME}  
+        cd ${path4}/${GRIDNAME}_${compset0}
 	./preview_namelists
-	cp ${path1}/user_datm.streams.txt.CLM1PT.CLM_USRDAT .
+	mv -f ${path1}/user_datm.streams.txt.CLM1PT.CLM_USRDAT_${GRIDNAME} user_datm.streams.txt.CLM1PT.CLM_USRDAT
         chmod u+w user_datm.streams.txt.CLM1PT.CLM_USRDAT
-	./preview_namelists
-
 #	./case.submit
+
 fi
 cd ${path1}
 done
-###############################################################_____END_____#########################################################""
+
+###############################################################_____END_____#########################################################
+
+###############################################################__REGRIDBATCH.SH__##################################################
+#!/bin/bash
+#
+# Batch script to submit to create mapping files for all standard
+# resolutions.  If you provide a single resolution via "$RES", only
+# that resolution will be used. In that case: If it is a regional or
+# single point resolution, you should set '#PBS -n' to 1, and be sure
+# that '-t regional' is specified in cmdargs.
+
+
+#----------------------------------------------------------------------
+# Set parameters
+#----------------------------------------------------------------------
+#SBATCH --account=geofag
+#SBATCH --job-name=mkmapdata
+#SBATCH --mem-per-cpu=256G --partition=hugemem
+#SBATCH --ntasks=1
+#SBATCH --time=05:00:00
+
+source /cluster/bin/jobsetup
+module load esmf/6.3.0rp1
+#module load nco
+#module load ncl
+export ESMF_NETCDF_LIBS="-lnetcdff -lnetcdf -lnetcdf_c++"
+#export ESMF_DIR=/usit/abel/u1/huit/ESMF/esmf
+export ESMF_COMPILER=intel
+export ESMF_COMM=openmpi
+#export ESMF_NETCDF="test"
+export ESMF_NETCDF_LIBPATH=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/lib
+export ESMF_NETCDF_INCLUDE=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/include
+ulimit -s unlimited
+
+export ESMFBIN_PATH=/cluster/software/VERSIONS/esmf/6_3_0rp1/bin/binO/Linux.intel.64.openmpi.default
+export CSMDATA=/work/users/marlam/inputdata
+export MPIEXEC=mpirun
+ 
+phys="clm4_5"
+RES=GRIDNAME
+
+GRIDFILE=../mkmapgrids/SCRIPgrid_GRIDNAME_nomask.nc
+regrid_num_proc=8
+#----------------------------------------------------------------------
+# Begin main script
+#----------------------------------------------------------------------
+
+if [ -z "$RES" ]; then
+   echo "Run for all valid resolutions"
+   resols=`../../bld/queryDefaultNamelist.pl -res list -silent`
+   if [ ! -z "$GRIDFILE" ]; then
+      echo "When GRIDFILE set RES also needs to be set for a single resolution"
+      exit 1
+   fi
+else
+   resols="$RES"
+fi
+if [ -z "$GRIDFILE" ]; then
+  grid=""
+else
+   if [[ ${#resols[@]} > 1 ]]; then
+      echo "When GRIDFILE is specificed only one resolution can also be given (# resolutions ${#resols[@]})"
+      echo "Resolutions input is: $resols"
+      exit 1
+   fi
+   grid="-f $GRIDFILE"
+fi
+
+if [ -z "$MKMAPDATA_OPTIONS" ]; then
+   echo "Run with standard options"
+   options=" "
+else
+   options="$MKMAPDATA_OPTIONS"
+fi
+echo "Create mapping files for this list of resolutions: $resols"
+
+#----------------------------------------------------------------------
+
+for res in $resols; do
+   echo "Create mapping files for: $res"
+#----------------------------------------------------------------------
+   cmdargs="-r $res $grid $options"
+
+   # For single-point and regional resolutions, tell mkmapdata that
+   # output type is regional
+   if [[ `echo "$res" | grep -c "1x1_"` -gt 0 || `echo "$res" | grep -c "5x5_"` -gt 0 ]]; then
+       res_type="regional"
+   else
+       res_type="global"
+   fi
+   # Assume if you are providing a gridfile that the grid is regional
+   if [ $grid != "" ];then
+       res_type="regional"
+   fi
+
+   cmdargs="$cmdargs -t $res_type"
+
+   echo "$res_type"
+   if [ "$res_type" = "regional" ]; then
+       echo "regional"
+       # For regional and (especially) single-point grids, we can get
+       # errors when trying to use multiple processors - so just use 1.
+       # We also do NOT set batch mode in this case, because some
+       # machines (e.g., yellowstone) do not listen to REGRID_PROC, so to
+       # get a single processor, we need to run mkmapdata.sh in
+       # interactive mode.
+       regrid_num_proc=1
+   else
+       echo "global"
+       regrid_num_proc=8
+       if [ ! -z "$LSFUSER" ]; then
+           echo "batch"
+	   cmdargs="$cmdargs -b"
+       fi
+       if [ ! -z "$PBS_O_WORKDIR" ]; then
+           cd $PBS_O_WORKDIR
+	   cmdargs="$cmdargs -b"
+       fi
+   fi
+
+   echo "args: $cmdargs"
+   echo "time env REGRID_PROC=$regrid_num_proc ./mkmapdata.sh $cmdargs\n"
+   time env REGRID_PROC=$regrid_num_proc ./mkmapdata.sh $cmdargs
+done
+#######################################################____RUN_LOCALITY_APPEND.SH___###########################################
+
+#!/bin/sh       
+ export INC_NETCDF=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/include
+ export LIB_NETCDF=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1/lib
+ export NETCDF_ROOT=/cluster/software/VERSIONS/netcdf.intel-4.3.3.1
+
+######################################################___STREAM_FILE___##########################################################
+
+<dataSource>
+   GENERIC
+</dataSource>
+<domainInfo>
+  <variableNames>
+     time    time
+        xc      lon
+        yc      lat
+        area    area
+        mask    mask
+  </variableNames>
+  <filePath>
+     /usit/abel/u1/marlam/ctsm/cime/tools/mapping/gen_domain_files/GRIDNAME
+  </filePath>
+  <fileNames>
+     domain.lnd.{GRIDNAME}_noocean.nc
+  </fileNames>
+</domainInfo>
+<fieldInfo>
+   <variableNames>
+        TBOT     tbot
+        SHUM     shum
+        WIND     wind
+        PRECTmms precn
+        FSDS     swdn
+        PSRF     pbot
+   </variableNames>
+   <filePath>
+     /work/users/marlam/inputdata/atm/datm7/CLM1PT_pan/GRIDNAME
+   </filePath>
+   <fileNames>
+    1901-01.nc
+1901-02.nc
+1901-03.nc
+1901-04.nc
+................
+...........
+1920-12.nc
+   </fileNames>
+   <offset>
+      0
+   </offset>
+</fieldInfo>
