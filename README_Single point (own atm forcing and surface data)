@@ -1,60 +1,46 @@
+# 0) mkdir ~/single_cell_experiment #Create a directory in your home directory calles "single_cell_experiment".
+# 0) cd ~/single_cell_experiment
+#Then put all the scripts below in "single_cell_experiment".
+# 1) MAIN SCRIPT : call it as you wish (run_clm_single.sh)
+# 2) regridbatch.sh
+# 3) run_locality_append.sh
+# 4) stream_file_1901_to_2014
+# 5) prepare_atm_forcing_data_CRUNCEP_1901-1920.ncl # this file must be duplicated and modified to fit the dates and the forcing (gswp or cru)
+########################################____MAIN_SCRIPT___##############################################
 #!/bin/sh
 
 
-path1="/usit/abel/u1/marlam/single_cell_experiment"
-path2="/usit/abel/u1/marlam/ctsm"
-path3="/work/users/marlam/inputdata"
-path4="/usit/abel/u1/marlam/cases"
-#compset0=I1PtClm50SpGs           #2000_DATM%1PT_CLM50%SP_SICE_SOCN_MOSART_SGLC_SWAV
+path1="~/single_cell_experiment" #main directory path
+path2="~/ctsm" #clm path
+path3="/work/users/marlam/inputdata" #inputdata path
+path4="~/cases" #directory where the case will be run
+
+#For single cell only compsets with SGLC work!!
 compset0=I2000Clm50BgcCruGs      #2000_DATM%CRUv7_CLM50%BGC_SICE_SOCN_MOSART_SGLC_SWAV
-#compset0=I2000Clm50SpGs           #2000_DATM%GSWP3v1_CLM50%SP_SICE_SOCN_MOSART_SGLC_SWAV
+
+#If you want to use CRU as atm forcing : put these files in "single_cell_directory and adapt them.
+#This process must be separated in periods shorter than 50 years
 prepare_atm_data1="prepare_atm_forcing_data_CRUNCEP_1901-1920.ncl"
 prepare_atm_data2="prepare_atm_forcing_data_CRUNCEP_1921-1955.ncl"
 prepare_atm_data3="prepare_atm_forcing_data_CRUNCEP_1956-1990.ncl"
 prepare_atm_data4="prepare_atm_forcing_data_CRUNCEP_1991-2016.ncl"
+
+#If you want to use GSWP3 as atm forcing : put these files in "single_cell_experiment" and adapt them.
 prepare_atm_dataA="prepare_atm_forcing_data_GSWP_1901-1935.ncl"
 prepare_atm_dataB="prepare_atm_forcing_data_GSWP_1936-1972.ncl"
 prepare_atm_dataC="prepare_atm_forcing_data_GSWP_1973-2010.ncl"
-regridbatch_file="regridbatch_mar.sh"
-stream_file="stream_file_1901_to_1901"
-imports="run_locality_append.sh"
 
-#for GRIDNAME in "1x1_Zac" "1x1_Nuu" "1x1_And" "1x1_Abi" #"1x1_Deg" "1x1_Adv2"  #"1x1_Abisko_pan" "1x1_Samoylov_pan"
-for GRIDNAME in "1x1_Abisko_pan" # "1x1_Kytalyk_pan" #"1x1_Bayelva_pan" "1x1_Zackenberg_pan"
+regridbatch_file="regridbatch.sh" # You will find this script below--> put it in "single_cell_experiment"
+stream_file="stream_file_1901_to_2014" # if you use your own atm forcing you will need to modify this file, take it from below 
+#and put it in the "single_cell_experiment" directory.
+imports="run_locality_append.sh" # You will find this script below--> put it in "single_cell_experiment"
+
+#this are the stations 
+for GRIDNAME in "1x1_Abisko_pan" #"1x1_Kytalyk_pan" "1x1_Bayelva_pan" "1x1_Zackenberg_pan"
 do
 	echo
 	echo $GRIDNAME
 	case $GRIDNAME in
-		1x1_Adv2)
-			plot_lat=78.186          #####################################-----FLUXNET_________________________________
-			plot_lon=15.923
-			CDATE=181204 #`date +%y%m%d`
-			;;
-	        1x1_And)
-			plot_lat=69.14
-			plot_lon=16.02
-			CDATE=181217 #today YYMMDD
-			;;
-		1x1_Abi)
-			plot_lat=68.36
-			plot_lon=18.79
-			CDATE=181215 #today YYMMDD
-			;;
-		1x1_Deg)
-			plot_lat=64.18
-			plot_lon=19.56
-			CDATE=181216 #today YYMMDD
-			;;
-		1x1_Zac)
-			plot_lat=74.47
-			plot_lon=339.45
-			CDATE=181217 #today YYMMDD
-			;;
-		1x1_Nuu)
-			plot_lat=64.13
-			plot_lon=308.61
-			CDATE=181217 #today YYMMDD #####################################-----PANGAEA_________________________________
-			;;
 		1x1_Abisko_pan)
 			plot_lat=68.35 
 			plot_lon=19.05
@@ -70,32 +56,19 @@ do
 			plot_lon=147.5
 			CDATE=190110 #today YYMMDD
 			;;
-		1x1_Samoylov_pan)
-			plot_lat=72.22
-			plot_lon=126.28
-			CDATE=190104 #today YYMMDD
-			;;
 		1x1_Zackenberg_pan)
 			plot_lat=74.5
 			plot_lon=339.4
 			CDATE=190103 #today YYMMDD
 			;;
 	esac
-
-###############################¸¸¸¸¸¸¸¸¸ SURFACEDATA¸¸¸¸¸¸¸¸¸¸¸#######################_________________________A
-# 1)Make SCRIPgrid of single cell______________________________________________________________________________A.1
-
 module load python2/2.7.10
 module load ncl
 module load nco
 module unload netcdf.gnu/4.4.1.1
-#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
-
-
-if false #1
+###############################¸¸¸¸¸¸¸¸¸ SURFACEDATA¸¸¸¸¸¸¸¸¸¸¸#######################_________________________A
+if false #1 Make SCRIPgrid of single cell______________________________________________________________________________A.1
 then
        cd ${path2}/tools/mkmapdata
 	./mknoocnmap.pl -p $plot_lat,$plot_lon -n $GRIDNAME
@@ -119,15 +92,11 @@ then
 	sleep 300m
 fi
 
-
-
-
 if false #2
 then
 	cd ${path2}/tools/mkmapdata
 	mv -f map_*$GRIDNAME* $GRIDNAME/
        
-
 # 3) Create the domain file_____________________________________________________________________________________A.3
 
        echo "__________________________________________Start creating domain file"
@@ -147,8 +116,6 @@ then
        mv -f $GRIDNAME/domain.lnd.*{$GRIDNAME}*.nc $GRIDNAME/domain.lnd.{$GRIDNAME}_noocean.nc
 
 fi
-
-
 
 if false #3
 then
@@ -201,9 +168,6 @@ fi
 #00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 #00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
-
-
-
 ############################,,,,,,,,,,CASE__SETUP,,,,,,,,,,,,,,,,,,,,,,####______________________________________
 if true #5
 then
@@ -225,7 +189,7 @@ then
 	./xmlchange RUN_STARTDATE="1901-01-01"
 	./xmlchange DATM_MODE="CLM1PT"
 	./xmlchange RESUBMIT="0"
-	./xmlchange DIN_LOC_ROOT_CLMFORC="/work/users/$USER/inputdata/atm/datm7/CLM1PT_data"	
+	./xmlchange DIN_LOC_ROOT_CLMFORC="${path3}/atm/datm7/CLM1PT_data"	
 	./xmlchange JOB_WALLCLOCK_TIME="03:59:00"
 	./xmlchange PROJECT="geofag"
 	./xmlchange DATM_CLMNCEP_YR_ALIGN="1901" 
