@@ -1,4 +1,9 @@
 
+# Get the model
+
+## How to get a specific branch
+## Which branch do I run?
+
 # Setup 
 
 - Notur or geofag
