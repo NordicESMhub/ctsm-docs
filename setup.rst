@@ -27,8 +27,17 @@ This will return something like:
 In the example above, two projects can be used (geofag and nn1000k). Then make sure you choose the right project when running CTSM.
 
 
+
 Inputdata
 ----------
+
+(only first time)
+
+::
+
+    cd ~/ctsm/cime/scripts
+    ./link_dirtree $CESM_DATA /work/users/$USER/inputdata
+
 
 Machines
 ---------
