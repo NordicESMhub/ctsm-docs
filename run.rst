@@ -31,6 +31,8 @@ Inputdata
     ./link_dirtree $CESM_DATA /work/users/$USER/inputdata
 
 
+Make a case
+-------------
 
 ::
 
