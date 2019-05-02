@@ -19,9 +19,22 @@ LOAD externals of CTSM (FATES and so on; only necessary first time), in folder ~
 
 navigate to ~/ctsm/cime/scripts/
 
+
+Inputdata
+----------
+
+(only first time or whenever it disappears in your workdir i.e. 45 days)
+
 ::
 
-   ./create_newcase --case ~/cases/I2000Clm50BgcCruGs  --compset I2000Clm50BgcCruGs   --res f19_g17 --machine abel --run-unsupported --project geofag
+    cd ~/ctsm/cime/scripts
+    ./link_dirtree $CESM_DATA /work/users/$USER/inputdata
+
+
+
+::
+
+   ./create_newcase --case ~/cases/I2000Clm50BgcCruGs  --compset I2000Clm50BgcCruGs   --res f19_g17 --machine abel --run-unsupported --project $CESM_ACCOUNT
 
 
 navigate to ~/cases/I2000Clm50BgcCruGs
