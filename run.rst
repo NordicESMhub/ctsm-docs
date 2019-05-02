@@ -83,6 +83,9 @@ add this below
 	hist_mfilt=5 #(number of output files)
 	hist_nhtfrq=-24 #(means daily outputs)
 
+
+`hist_mfilt` allows you to specify the number of output files and `hist_nhtfrq` the frequency; here `-24` means daily outputs.
+	
 5) case build
 ~~~~~~~~~~~~~~
 
