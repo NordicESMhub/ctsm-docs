@@ -43,13 +43,14 @@ eg
 2) Change configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+- For instance, to change the duration of a simulation to 5 days:
+
 ::
 
     ./xmlchange STOP_OPTION=ndays #(nyears, nmonths)
     ./xmlchange STOP_N=5 #(then 5 days)
-    ./xmlchange NTASKS=1 #(number of CPU's, can be increased if excitation error)
 	
-or edit the xml files is another way to change these parameters
+or edit the xml files is another way to change these parameters (**not recommended**).
 
 3) setup case
 ~~~~~~~~~~~~~~
@@ -114,3 +115,11 @@ Customized
 
 - Step-1: Tutorial_creating_surface_data_for_single_point.md
 - Step-2: For atmospheric forcing README_Single point (own atm forcing and surface data) (include scripts)
+
+
+Change configuration
++++++++++++++++++++++
+
+::
+
+    ./xmlchange NTASKS=1 #(number of CPU's, can be increased if excitation error)
