@@ -139,8 +139,13 @@ Customized
 
    ./create_newcase --case ~/cases/brazil_I2000Clm50BgcCruGs --compset I2000Clm50BgcCruGs  --res  1x1_brazil --machine abel --run-unsupported --project geofag
 
-- Step-1: Tutorial_creating_surface_data_for_single_point.md
-- Step-2: For atmospheric forcing README_Single point (own atm forcing and surface data) (include scripts)
+- Step-1: 
+
+.. include:: Tutorial_creating_surface_data_for_single_point.rst
+
+- Step-2: For atmospheric forcing (own atm forcing and surface data) (include scripts)
+
+.. include:: README_Single_point.rst 
 
 
 Change configuration

@@ -1,3 +1,6 @@
+
+::
+
 # 0) mkdir ~/single_cell_experiment #Create a directory in your home directory calles "single_cell_experiment".
 # 0) cd ~/single_cell_experiment
 #Then put all the scripts below in "single_cell_experiment".
@@ -6,6 +9,7 @@
 # 3) run_locality_append.sh
 # 4) stream_file_1901_to_2014
 # 5) prepare_atm_forcing_data_CRUNCEP_1901-1920.ncl # this file must be duplicated and modified to fit the dates and the forcing (gswp or cru)
+
 ########################################____MAIN_SCRIPT___##############################################
 #!/bin/sh
 
