@@ -92,8 +92,16 @@ add this below
 
 ::    
 
-    (./case.build --clean)
     ./case.build
+
+
+**Remark**: if your build fails or if you make changes and need to rebuild, make sure you clean the previous build:
+
+
+::    
+
+    ./case.build --clean
+
 
 6) run case
 ~~~~~~~~~~~~~~
