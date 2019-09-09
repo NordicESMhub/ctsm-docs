@@ -142,7 +142,6 @@ To run for the Brazil test site do the following:
 
 
 **Remark**: make sure you set **CESM_ACCOUNT** to your project.
-
 Customized
 ~~~~~~~~~~~
 
@@ -161,3 +160,10 @@ Change configuration
 ::
 
     ./xmlchange NTASKS=1 #(number of CPU's, can be increased if excitation error)
+
+
+
+Run a regional case 
+-----------------------
+
+.. include:: regional_case.rst
