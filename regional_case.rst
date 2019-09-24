@@ -32,7 +32,7 @@ To run the model with Satellite Phenology mode, do the following
     ./create_newcase -case ~/cases/SCA_SpRun -res CLM_USRDAT -compset I2000Clm50SpGs --machine abel --run-unsupported --project $CESM_ACCOUNT
     
 
-Here, the compset **I2000Clm50SpGs** initialize the model from 2000 conditions with GSWP3 atmospheric forcing data. If you want to run CTSM with BGC mode and force with CRU NCEP v7 data set, use **I2000Clm50BgcCru** compset. To see available compset aliases and their long names, type the following :
+Here, the compset **I2000Clm50SpGs** initialize the model from 2000 conditions with GSWP3 atmospheric forcing data. If you want to run CTSM with BGC mode and force with CRU NCEP v7 data set, use **I2000Clm50BgcCruGs** compset. To see available compset aliases and their long names, type the following :
 ::
 
     $CTSMROOT/cime/scripts/query_config --compsets clm
